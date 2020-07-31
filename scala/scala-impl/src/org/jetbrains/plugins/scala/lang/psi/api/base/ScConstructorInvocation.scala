@@ -27,7 +27,7 @@ trait ScConstructorInvocation extends ScalaPsiElement with ConstructorInvocation
 
   def args: Option[ScArgumentExprList]
 
-  override def arguments: Seq[ScArgumentExprList]
+  override def arguments: collection.Seq[ScArgumentExprList]
 
   def expectedType: Option[ScType]
 

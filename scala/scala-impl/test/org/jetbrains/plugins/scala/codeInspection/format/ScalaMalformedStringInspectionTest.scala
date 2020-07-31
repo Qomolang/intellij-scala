@@ -64,6 +64,7 @@ class ScalaMalformedStringInspectionTest extends ScalaInspectionTestBase {
       .asScala
       .flatMap(info => Option(info.getDescription))
       .filter(_.contains(" cannot be used for a"))
+      .toSeq
   }
 
   def build_test(): (String, Seq[String]) = {

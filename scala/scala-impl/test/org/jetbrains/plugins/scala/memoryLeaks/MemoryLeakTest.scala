@@ -172,6 +172,7 @@ object MemoryLeakTest {
     createInspectionProfile.getAllEnabledInspectionTools(project).asScala
       .flatMap(_.getTools.asScala)
       .map(_.getTool)
+      .toSeq
   }
 
   private[this] def createInspectionProfile(implicit project: ProjectContext): InspectionProfile = {

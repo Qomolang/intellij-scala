@@ -538,7 +538,7 @@ object ScalaPsiUtil {
 
   def stub(element: PsiElement): NullSafe[StubElement[_]] = NullSafe {
     element match {
-      case stubbed: StubBasedPsiElementBase[_] => stubbed.getStub
+      case stubbed: StubBasedPsiElementBase[_] => stubbed.getStub.asInstanceOf[StubElement[_]]
       case file: PsiFileImpl => file.getStub
       case _ => null
     }

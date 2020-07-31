@@ -189,7 +189,7 @@ class ScExtendsBlockImpl private(stub: ScExtendsBlockStub, node: ASTNode)
     buffer
   }
 
-  override def members: Seq[ScMember] = {
+  override def members: collection.Seq[ScMember] = {
     templateBodies.flatMap {
       _.members
     } ++ earlyDefinitions.toSeq.flatMap {
@@ -204,12 +204,12 @@ class ScExtendsBlockImpl private(stub: ScExtendsBlockStub, node: ASTNode)
 
   def nameId: Null = null
 
-  override def aliases: Seq[ScTypeAlias] =
+  override def aliases: collection.Seq[ScTypeAlias] =
     templateBodies.flatMap {
       _.aliases
     }
 
-  override def functions: Seq[ScFunction] =
+  override def functions: collection.Seq[ScFunction] =
     templateBodies.flatMap {
       _.functions
     }

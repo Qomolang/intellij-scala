@@ -18,7 +18,7 @@ import org.junit.experimental.categories.Category
 
 import scala.collection.JavaConverters._
 
-abstract class SbtAnnotatorTestBase extends AnnotatorTestBase with MockSbtBase {
+abstract class SbtAnnotatorTestBase extends org.jetbrains.sbt.annotator.AnnotatorTestBase with MockSbtBase {
 
   implicit protected lazy val module: Module = inWriteAction {
     val moduleName = getModule.getName + Sbt.BuildModuleSuffix + ".iml"

@@ -60,7 +60,7 @@ class ScSimpleTypeElementImpl(node: ASTNode) extends ScalaPsiElementImpl(node) w
       }
     }
 
-    def getConstructorParams(constr: PsiMethod, subst: ScSubstitutor): (Seq[Seq[Parameter]], Boolean) = {
+    def getConstructorParams(constr: PsiMethod, subst: ScSubstitutor): (collection.Seq[collection.Seq[Parameter]], Boolean) = {
       constr match {
         case ScalaConstructor(c) =>
           val clauses = c.effectiveParameterClauses
@@ -77,7 +77,7 @@ class ScSimpleTypeElementImpl(node: ASTNode) extends ScalaPsiElementImpl(node) w
       }
     }
 
-    def updateImplicits(tp: ScType, withExpected: Boolean, params: Seq[Seq[Parameter]], lastImplicit: Boolean): ScType = {
+    def updateImplicits(tp: ScType, withExpected: Boolean, params: collection.Seq[collection.Seq[Parameter]], lastImplicit: Boolean): ScType = {
       val (innerRes, implicitParams) =
         if (lastImplicit) {
           //Let's add implicit parameters

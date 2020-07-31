@@ -219,7 +219,7 @@ object TestNodeProvider {
     }
   }
 
-  private def checkClauses(clauses: Seq[ScParameterClause], paramNames: List[String]*): Boolean = {
+  private def checkClauses(clauses: collection.Seq[ScParameterClause], paramNames: List[String]*): Boolean = {
     val filteredClauses = clauses.filterNot(_.parameters.forall(_.isImplicitParameter))
     filteredClauses.length == paramNames.length && (filteredClauses zip paramNames).forall {
       case (clause, names) =>

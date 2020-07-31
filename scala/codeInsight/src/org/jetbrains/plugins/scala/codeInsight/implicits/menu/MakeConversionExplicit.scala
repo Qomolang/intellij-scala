@@ -23,7 +23,7 @@ class MakeConversionExplicit extends AnAction(
 
     new MakeImplicitConversionExplicit().invoke(e.getData(CommonDataKeys.PROJECT), editor, element)
 
-    val prefixAndSuffixInlays: Seq[Inlay[_]] = if(inlay == null) Seq() else {
+    val prefixAndSuffixInlays: collection.Seq[Inlay[_]] = if(inlay == null) Seq() else {
       val startOffset = inlay.getOffset
       val endOffset = {
         val inlayText = inlay.getRenderer.asInstanceOf[HintRenderer].getText

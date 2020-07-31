@@ -379,7 +379,7 @@ class ScalaLanguageInjectorTest extends AbstractLanguageInjectionTestCase {
   ////////////////////////////////////////
 
   def testThatAllInjectionPatternsAreCompiled(): Unit = {
-    val injections: Seq[BaseInjection] = intelliLangConfig.getInjections("scala").asScala
+    val injections: Seq[BaseInjection] = intelliLangConfig.getInjections("scala").asScala.toSeq
     for {
       injection <- injections
       place: InjectionPlace <- injection.getInjectionPlaces

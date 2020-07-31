@@ -18,7 +18,7 @@ class ScalaMemberSelectionPanel(title: String, infos: ju.List[ScalaMemberInfo])
   extends ScalaMemberSelectionPanelBase[ScNamedElement, ScalaMemberInfo](title, infos, null) {
 
   protected def this(title: String,
-                     members: Seq[ScNamedElement],
+                     members: collection.Seq[ScNamedElement],
                      model: AbstractMemberInfoModel[ScNamedElement, ScalaMemberInfo]) =
     this(title, members.map(new ScalaMemberInfo(_)).asJava)(model)
 

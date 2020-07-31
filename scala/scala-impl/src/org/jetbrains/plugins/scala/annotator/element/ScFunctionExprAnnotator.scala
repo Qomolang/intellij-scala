@@ -99,7 +99,8 @@ object ScFunctionExprAnnotator extends ElementAnnotator[ScFunctionExpr] {
     typeMismatch
   }
 
-  private def missingParameterTypeIn(parameters: Seq[ScParameter])(implicit holder: ScalaAnnotationHolder): Boolean = {
+  private def missingParameterTypeIn(parameters: collection.Seq[ScParameter])
+                                    (implicit holder: ScalaAnnotationHolder): Boolean = {
     var missing = false
     parameters.iterator.takeWhile(_ => !missing).foreach { parameter =>
       if (parameter.typeElement.isEmpty && parameter.expectedParamType.isEmpty) {

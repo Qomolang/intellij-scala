@@ -79,7 +79,7 @@ class BspCommunicationService extends Disposable {
   def closeAll: Try[Unit] =
     comms.values
       .map(_.closeSession())
-      .foldLeft(Success(Unit): Try[Unit])(_.orElse(_))
+      .foldLeft(Success(()): Try[Unit])(_.orElse(_))
 
   private def executionSettings(base: File): BspExecutionSettings =
     BspExecutionSettings.executionSettingsFor(base)

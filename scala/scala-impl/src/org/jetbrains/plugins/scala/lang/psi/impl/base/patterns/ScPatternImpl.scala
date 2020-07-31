@@ -58,7 +58,7 @@ trait ScPatternImpl extends ScPattern {
     visitor.visitPattern(this)
   }
 
-  override def subpatterns: Seq[ScPattern] = this match {
+  override def subpatterns: collection.Seq[ScPattern] = this match {
     case _: ScReferencePattern => Seq.empty
     case _ => findChildrenByClassScala[ScPattern](classOf[ScPattern])
   }

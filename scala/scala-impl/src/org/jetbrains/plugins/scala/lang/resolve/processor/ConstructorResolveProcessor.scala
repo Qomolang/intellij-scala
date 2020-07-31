@@ -17,7 +17,7 @@ import scala.collection.Set
   * User: Alexander Podkhalyuzin
   * Date: 30.04.2010
   */
-class ConstructorResolveProcessor(constr: PsiElement, refName: String, args: List[Seq[Expression]],
+class ConstructorResolveProcessor(constr: PsiElement, refName: String, args: List[collection.Seq[Expression]],
                                   typeArgs: Seq[ScTypeElement], kinds: Set[ResolveTargets.Value],
                                   shapeResolve: Boolean, allConstructors: Boolean)
   extends MethodResolveProcessor(constr, refName, args, typeArgs, Seq.empty, kinds,

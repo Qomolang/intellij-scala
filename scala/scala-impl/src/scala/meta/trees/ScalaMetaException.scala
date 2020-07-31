@@ -16,6 +16,7 @@ class ScalaMetaResolveError(elem: PsiElement) extends ScalaMetaException(s"Canno
 class ScalaMetaTypeResultFailure(cause: String) extends ScalaMetaException(s"Cannot calculate type: $cause")
 
 package object error {
+  def toDo213: Nothing = throw new RuntimeException("TODO 2.13") // TODO 2.13
   def unreachable = throw new AbortException("This code should be unreachable")
   def unreachable(reason: String) = throw new AbortException(s"This code should be unreachable: $reason")
   def unresolved(cause: String) = throw new AbortException(s"Failed to typecheck: $cause")

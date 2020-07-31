@@ -174,7 +174,7 @@ abstract class IncrementalCompilationTestBase(override protected val incremental
     targetDir.getChildren.map(_.getName).toSet
 
   protected def classFileNames(className: String)
-                            (implicit version: ScalaVersion): Set[String] = {
+                              (implicit version: ScalaVersion): Set[String] = {
     val suffixes = version.languageLevel match {
       case ScalaLanguageLevel.Scala_3_0 => Set("class", "tasty")
       case _                            => Set("class")
@@ -187,7 +187,8 @@ abstract class IncrementalCompilationTestBase(override protected val incremental
 
     private var classes: Set[String] = Set.empty
 
-    def this(name: String, classes: Set[String], code: String) = {
+    def this(name: String, classes: Set[String], code: String)
+            (implicit version: ScalaVersion) = {
       this(name)
       writeCode(classes, code)
     }

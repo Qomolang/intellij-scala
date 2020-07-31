@@ -18,9 +18,9 @@ import org.jetbrains.plugins.scala.lang.psi.types.ScType
 
 trait ScExtendsBlock extends ScalaPsiElement {
 
-  def members : Seq[ScMember]
-  def functions : Seq[ScFunction]
-  def aliases : Seq[ScTypeAlias]
+  def members : collection.Seq[ScMember]
+  def functions : collection.Seq[ScFunction]
+  def aliases : collection.Seq[ScTypeAlias]
 
   def templateBody: Option[ScTemplateBody]
 

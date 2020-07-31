@@ -741,9 +741,10 @@ class ScalaSuperParametersTest extends ScalaCodeInsightTestBase {
       icon
         .getAllLayers
         .reverse
+        .toSeq
         .flatMap {
           case layer: RowIcon => layer.getAllIcons
-          case layer => Array(layer)
+          case layer => Seq(layer)
         }
     case _ => Seq(icon)
   }

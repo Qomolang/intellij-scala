@@ -237,7 +237,7 @@ class ScalaIntroduceParameterHandler extends ScalaRefactoringActionHandler with 
 
   def createMethodDescriptor(method: ScMethodLike, paramInfo: ScalaParameterInfo): ScalaMethodDescriptor = {
     new ScalaMethodDescriptor(method) {
-      override def parametersInner: Seq[Seq[ScalaParameterInfo]] = {
+      override def parametersInner: collection.Seq[collection.Seq[ScalaParameterInfo]] = {
         val params = super.parametersInner
         params.headOption match {
           case Some(seq) if seq.lastOption.exists(_.isRepeatedParameter) =>

@@ -165,7 +165,7 @@ package object extensions {
   implicit class TraversableExt[CC[X] <: Traversable[X], A](private val value: CC[A]) extends AnyVal {
 
     def foreachDefined(pf: PartialFunction[A, Unit]): Unit =
-      value.foreach(pf.applyOrElse(_, (_: A) => Unit))
+      value.foreach(pf.applyOrElse(_, (_: A) => ()))
 
     def filterBy[T: ClassTag](implicit factory: scala.collection.Factory[T, CC[T]]): CC[T] = {
       val clazz = implicitly[ClassTag[T]].runtimeClass

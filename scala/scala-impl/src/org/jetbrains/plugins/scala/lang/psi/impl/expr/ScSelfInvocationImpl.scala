@@ -60,7 +60,7 @@ class ScSelfInvocationImpl(node: ASTNode) extends ScExpressionImplBase(node) wit
     val method = PsiTreeUtil.getContextOfType(this, classOf[ScFunction])
     if (method == null) return Array.empty
 
-    val expressions: Seq[Expression] = args match {
+    val expressions: collection.Seq[Expression] = args match {
       case Some(arguments) => arguments.exprs
       case None            => Seq.empty
     }

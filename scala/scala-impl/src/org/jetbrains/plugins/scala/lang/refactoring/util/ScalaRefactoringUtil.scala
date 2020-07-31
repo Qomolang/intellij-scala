@@ -596,12 +596,17 @@ object ScalaRefactoringUtil {
       case i: ScIf =>
         builder.append("if (...) {...}")
         if (i.elseExpression.isDefined) builder.append(" else {...}")
-      case ScInfixElement(left, op, Some(right)) =>
-        builder.append(getShortText(left))
-        builder.append(" ")
-        builder.append(getShortText(op))
-        builder.append(" ")
-        builder.append(getShortText(right))
+        //
+      case ScInfixElement(left, op, rightOption) =>
+        rightOption match {
+          case Some(right) =>
+            builder.append(getShortText(left))
+            builder.append(" ")
+            builder.append(getShortText(op))
+            builder.append(" ")
+            builder.append(getShortText(right))
+          case _ =>
+        }
       case i: ScInterpolationPattern =>
         builder.append(getShortText(i.ref))
         builder.append("\"...\"")

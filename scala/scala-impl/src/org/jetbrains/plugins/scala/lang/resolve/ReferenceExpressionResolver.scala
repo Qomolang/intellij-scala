@@ -296,7 +296,7 @@ class ReferenceExpressionResolver(implicit projectContext: ProjectContext) {
         )
       }
 
-    def processAnyAssignment(exprs: Seq[ScExpression],
+    def processAnyAssignment(exprs: collection.Seq[ScExpression],
                              call: MethodInvocation,
                              callReference: ScReferenceExpression,
                              processor: BaseProcessor,
@@ -640,7 +640,7 @@ class ReferenceExpressionResolver(implicit projectContext: ProjectContext) {
   private def collectNamedCompletions(parameters: ScParameters,
                                       processor: CompletionProcessor,
                                       substitutor: ScSubstitutor,
-                                      expressions: Seq[ScExpression],
+                                      expressions: collection.Seq[ScExpression],
                                       index: Int): Unit = {
     val clauses = parameters.clauses
     if (0 <= index && index < clauses.length) {

@@ -44,7 +44,7 @@ class ScalaUnusedSymbolInspection extends HighlightingPassInspection {
     }
   }
 
-  override def invoke(element: PsiElement, isOnTheFly: Boolean): collection.Seq[ProblemInfo] = if (!shouldProcessElement(element)) Seq.empty else {
+  override def invoke(element: PsiElement, isOnTheFly: Boolean): collection.Seq[ProblemInfo] = if (!shouldProcessElement(element)) collection.Seq.empty else {
     val elements: collection.Seq[PsiElement] = element match {
       case fun: ScFunctionExpr => fun.parameters.filterNot(p => p.isWildcard || p.isImplicitParameter)
       case fun: ScMethodLike =>

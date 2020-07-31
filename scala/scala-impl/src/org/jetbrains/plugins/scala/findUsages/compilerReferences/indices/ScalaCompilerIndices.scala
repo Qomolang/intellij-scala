@@ -37,8 +37,8 @@ private[findUsages] object ScalaCompilerIndices {
     }
   }
 
-  private[this] def backUsagesExtension: IndexExtension[CompilerRef, Seq[Int], CompiledScalaFile] =
-    new IndexExtension[CompilerRef, Seq[Int], CompiledScalaFile] {
+  private[this] def backUsagesExtension: IndexExtension[CompilerRef, collection.Seq[Int], CompiledScalaFile] =
+    new IndexExtension[CompilerRef, collection.Seq[Int], CompiledScalaFile] {
       override def getVersion: Int = version
       override def getName: IndexId[CompilerRef, collection.Seq[Int]] = backwardUsages
       override def getKeyDescriptor: KeyDescriptor[CompilerRef] = refDescriptor

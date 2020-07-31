@@ -80,7 +80,7 @@ abstract class PositionManagerTestBase extends ScalaDebuggerTestCase {
     }
 
     assert(!hasOffsets || offsets.nonEmpty, s"Not specified offset marker in test case. Use $offsetMarker in provided text of the file.")
-    sourcePositionsOffsets += (fileName -> offsets)
+    sourcePositionsOffsets += (fileName -> offsets.toSeq)
     addSourceFile(fileName, cleanedText)
 
     if (breakpointLine >= 0)

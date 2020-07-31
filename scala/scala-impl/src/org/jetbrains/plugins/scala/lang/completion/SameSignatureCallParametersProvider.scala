@@ -101,7 +101,7 @@ object SameSignatureCallParametersProvider {
       .withInsertHandler(new AssignmentsInsertHandler)
 
     private def findResolvableParameters(reference: PsiElement)
-                                        (parameters: Seq[ScParameter]) = {
+                                        (parameters: collection.Seq[ScParameter]) = {
       val names = parameters.map(_.name)
 
       val elements = names.map {
@@ -172,7 +172,7 @@ object SameSignatureCallParametersProvider {
   private[this] def createLookupElement(method: ScMethodLike,
                                         clauseIndex: Int,
                                         substitutor: ScSubstitutor)
-                                       (argumensWithNames: Seq[ScParameter] => Seq[(String, Argument)]) = {
+                                       (argumensWithNames: collection.Seq[ScParameter] => collection.Seq[(String, Argument)]) = {
     val parameters = method.parametersInClause(clauseIndex)
     parameters.length match {
       case 0 | 1 => None
@@ -195,7 +195,7 @@ object SameSignatureCallParametersProvider {
     }
   }
 
-  private[this] def applicableNames(parameters: Seq[ScParameter],
+  private[this] def applicableNames(parameters: collection.Seq[ScParameter],
                                     substitutor: ScSubstitutor,
                                     nameToArgument: Map[String, Argument]) = for {
     parameter <- parameters

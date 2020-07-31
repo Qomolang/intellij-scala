@@ -41,7 +41,7 @@ abstract class ScalaRenameTestBase extends ScalaLightPlatformCodeInsightTestCase
   override protected def afterSetUpProject(module: Module): Unit = {
     super.afterSetUpProject(module)
     LocalFileSystem.getInstance().refresh(false)
-    myDirectory = PsiTestUtil.createTestProjectStructure(projectAdapter, moduleAdapter, rootBefore, new util.HashSet[File]())
+    myDirectory = PsiTestUtil.createTestProjectStructure(projectAdapter, moduleAdapter, rootBefore, new util.HashSet())
     filesBefore =
       VfsUtil.collectChildrenRecursively(myDirectory.findChild("tests")).asScala
         .filter(!_.isDirectory)
@@ -93,7 +93,7 @@ abstract class ScalaRenameTestBase extends ScalaLightPlatformCodeInsightTestCase
           occ = text.indexOf(caretMarker)
         }
 
-        result
+        result.toSeq
       }
       val result = findOffsets(text).map(offset => CaretPosition(file, offset))
       if (result.nonEmpty) {

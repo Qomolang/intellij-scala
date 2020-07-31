@@ -9,8 +9,8 @@ object Versions {
   val sbtVersion: String = Sbt.latest
   val bloopVersion = "1.4.1"
   val zincVersion = "1.4.0-M1"
-  val intellijVersion = "202.5792.28"
-  val bspVersion = "2.0.0-M11+12-6a67fd76-SNAPSHOT"
+  val intellijVersion = "202.6397.20"
+  val bspVersion = "2.0.0-M12"
   val sbtStructureVersion: String = "2020.2+2-b4bf15a0"
   val sbtIdeaShellVersion: String = "2018.3"
   val compilerIndicesVersion = "1.0.4"
@@ -30,7 +30,7 @@ object Versions {
     val latest_2_10 = "2.10.7"
     val latest_2_11 = "2.11.12"
     val latest_2_12 = "2.12.10"
-    val latest_2_13 = "2.13.1"
+    val latest_2_13 = "2.13.2"
     val latest_3_0 = "0.25.0-RC2"
     val latest_dotty: String = latest_3_0
     val latest: String = latest_2_13

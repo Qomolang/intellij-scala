@@ -49,7 +49,9 @@ trait TreeAdapter {
   }
 
   def toAnnotCtor(annot: ScAnnotation): m.Term.New = {
-    m.Term.New(m.Template(Nil, List(toCtor(annot.constructorInvocation)), m.Term.Param(Nil, m.Name.Anonymous(), None, None), None))
+    // TODO 2.13
+//    m.Term.New(m.Template(Nil, List(toCtor(annot.constructorInvocation)), m.Term.Param(Nil, m.Name.Anonymous(), None, None), None))
+    toDo213
   }
 
   def toMacroDefn(t: ScMacroDefinition): m.Defn.Macro =
@@ -99,39 +101,47 @@ trait TreeAdapter {
   }
 
   def toVar(t: ScVariableDeclaration): m.Decl.Var = {
-    m.Decl.Var(convertMods(t), t.getIdList.fieldIds.map { it => m.Pat.Var.Term(toTermName(it)) }.toList, toType(t.typeElement.get))
+    // TODO 2.13
+//    m.Decl.Var(convertMods(t), t.getIdList.fieldIds.map { it => m.Pat.Var.Term(toTermName(it)) }.toList, toType(t.typeElement.get))
+    toDo213
   }
 
   def toVal(t: ScValueDeclaration): m.Decl.Val = {
-    m.Decl.Val(convertMods(t), t.getIdList.fieldIds.map { it => m.Pat.Var.Term(toTermName(it)) }.toList, toType(t.typeElement.get))
+    // TODO 2.13
+//    m.Decl.Val(convertMods(t), t.getIdList.fieldIds.map { it => m.Pat.Var.Term(toTermName(it)) }.toList, toType(t.typeElement.get))
+    toDo213
   }
 
   def toTrait(t: ScTrait): m.Tree = {
-    val defn = m.Defn.Trait(
-      convertMods(t),
-      toTypeName(t),
-      t.typeParameters.map(toTypeParams).toList,
-      m.Ctor.Primary(Nil, m.Ctor.Ref.Name("this"), Nil),
-      template(t.physicalExtendsBlock)
-    )
-    t.baseCompanionModule match {
-      case Some(obj: ScObject) => m.Term.Block(List(defn, toObject(obj)))
-      case _      => defn
-    }
+    // TODO 2.13
+//    val defn = m.Defn.Trait(
+//      convertMods(t),
+//      toTypeName(t),
+//      t.typeParameters.map(toTypeParams).toList,
+//      m.Ctor.Primary(Nil, m.Ctor.Ref.Name("this"), Nil),
+//      template(t.physicalExtendsBlock)
+//    )
+//    t.baseCompanionModule match {
+//      case Some(obj: ScObject) => m.Term.Block(List(defn, toObject(obj)))
+//      case _      => defn
+//    }
+    toDo213
   }
 
   def toClass(c: ScClass): m.Tree = {
-    val defn = m.Defn.Class(
-      convertMods(c),
-      toTypeName(c),
-      c.typeParameters.map(toTypeParams).toList
-      ctor(c.constructor),
-      template(c.physicalExtendsBlock)
-    )
-    c.baseCompanionModule match {
-      case Some(obj: ScObject) => m.Term.Block(defn, toObject(obj))
-      case _      => defn
-    }
+    // TODO 2.13
+//    val defn = m.Defn.Class(
+//      convertMods(c),
+//      toTypeName(c),
+//      c.typeParameters.map(toTypeParams).toList
+//      ctor(c.constructor),
+//      template(c.physicalExtendsBlock)
+//    )
+//    c.baseCompanionModule match {
+//      case Some(obj: ScObject) => m.Term.Block(defn, toObject(obj))
+//      case _      => defn
+//    }
+    toDo213
   }
 
   def toClass(c: PsiClass): Defn.Class = m.Defn.Class(
@@ -149,16 +159,19 @@ trait TreeAdapter {
   )
 
   def ctor(pc: Option[ScPrimaryConstructor]): m.Ctor.Primary = {
-    pc match {
-      case Some(ctor) => m.Ctor.Primary(convertMods(ctor), toPrimaryCtorName(ctor), ctor.parameterList.clauses.map(convertParamClause).toList)
-      case None => unreachable("no primary constructor in class")
-    }
+    // TODO 2.13
+//    pc match {
+//      case Some(ctor) => m.Ctor.Primary(convertMods(ctor), toPrimaryCtorName(ctor), ctor.parameterList.clauses.map(convertParamClause).toList)
+//      case None => unreachable("no primary constructor in class")
+//    }
+    toDo213
   }
 
   // FIXME: we don't have explicit information on what ctor has been used, so just select first one
   def ctor(c: PsiClass): m.Ctor.Primary = {
 //    m.Ctor.Primary(Seq.empty, m.Ctor.Ref.Name(c.getName).withDenot())
-    c ???
+    // c
+    ???
   }
 
   def caseClause(c: patterns.ScCaseClause): m.Case = {
@@ -174,18 +187,19 @@ trait TreeAdapter {
       case x :: xs  => Alternative(pattern(x), compose(xs))
     }
     // WHY??(((
-    def arg(pt: patterns.ScPattern): m.Pat.Arg = pt match {
-      case _: ScSeqWildcard       =>  Arg.SeqWildcard()
-      case _: ScWildcardPattern   =>  Wildcard()
-      case ScStableReferencePattern(reference) => toTermName(reference)
-      case t: ScPattern           => pattern(t)
-    }
+    // TODO 2.13
+//    def arg(pt: patterns.ScPattern): m.Pat.Arg = pt match {
+//      case _: ScSeqWildcard       =>  Arg.SeqWildcard()
+//      case _: ScWildcardPattern   =>  Wildcard()
+//      case ScStableReferencePattern(reference) => toTermName(reference)
+//      case t: ScPattern           => pattern(t)
+//    }
     pt match {
-      case t: ScReferencePattern  =>  Var.Term(toTermName(t))
-      case t: ScConstructorPattern=>  Extract(toTermName(t.ref), Nil, t.args.patterns.map(arg).toList)
-      case t: ScNamingPattern     =>  Bind(Var.Term(toTermName(t)), arg(t.named))
-      case t@ ScTypedPattern(_: types.ScWildcardTypeElement) => Typed(if (t.isWildcard) Wildcard() else Var.Term(toTermName(t)), Type.Wildcard())
-      case t@ ScTypedPattern(te)  =>  Typed(if (t.isWildcard) Wildcard() else Var.Term(toTermName(t)), toType(te).patTpe)
+      case t: ScReferencePattern  => toDo213 /*Var.Term(toTermName(t))*/ // TODO 2.13
+      case t: ScConstructorPattern=> toDo213 /*Extract(toTermName(t.ref), Nil, t.args.patterns.map(arg).toList)*/ // TODO 2.13
+      case t: ScNamingPattern     => toDo213 /*Bind(Var.Term(toTermName(t)), arg(t.named))*/ // TODO 2.13
+      case t@ ScTypedPattern(_: types.ScWildcardTypeElement) => toDo213 /*Typed(if (t.isWildcard) Wildcard() else Var.Term(toTermName(t)), Type.Wildcard())*/ // TODO 2.13
+      case t@ ScTypedPattern(te)  => toDo213 /*Typed(if (t.isWildcard) Wildcard() else Var.Term(toTermName(t)), toType(te).patTpe)*/ // TODO 2.13
       case ScLiteralPattern(scLiteral)    =>  literal(scLiteral)
       case t: ScTuplePattern      =>  Tuple(t.patternList.get.patterns.map(pattern).toList)
       case t: ScWildcardPattern   =>  Wildcard()
@@ -197,26 +211,28 @@ trait TreeAdapter {
   }
 
   def template(t: p.toplevel.templates.ScExtendsBlock): m.Template = {
-    val exprs   = t.templateBody.map (it => List(it.exprs.map(expression): _*))
-    val members = t.templateBody.map (it => it.members.map(ideaToMeta(_).asInstanceOf[m.Stat]).toList)
-    val early   = t.earlyDefinitions.map (it => it.members.map(ideaToMeta(_).asInstanceOf[m.Stat]).toList).getOrElse(Nil)
-    val ctor = t.templateParents
-      .flatMap(_.children.find(_.isInstanceOf[ScConstructorInvocation]))
-      .map(c=>toCtor(c.asInstanceOf[ScConstructorInvocation]))
-      .toList
-    val mixins = t.templateParents.map(x=>x.typeElementsWithoutConstructor.map(toType).map(toCtor).toList).getOrElse(Nil)
-    val self    = t.selfType match {
-      case Some(tpe: ptype.ScType) => m.Term.Param(Nil, m.Term.Name("self"), Some(toType(tpe)), None)
-      case None => m.Term.Param(Nil, m.Name.Anonymous(), None, None)
-    }
-    // FIXME: preserve expression and member order
-    val stats = (exprs, members) match {
-      case (Some(exp), Some(hld)) => hld ++ exp
-      case (Some(exp), None)  => exp
-      case (None, Some(hld))  => hld
-      case (None, None)       => Nil
-    }
-    m.Template(early, ctor ++ mixins, self, stats)
+    // TODO 2.13
+//    val exprs   = t.templateBody.map (it => List(it.exprs.map(expression): _*))
+//    val members = t.templateBody.map (it => it.members.map(ideaToMeta(_).asInstanceOf[m.Stat]).toList)
+//    val early   = t.earlyDefinitions.map (it => it.members.map(ideaToMeta(_).asInstanceOf[m.Stat]).toList).getOrElse(Nil)
+//    val ctor = t.templateParents
+//      .flatMap(_.children.find(_.isInstanceOf[ScConstructorInvocation]))
+//      .map(c=>toCtor(c.asInstanceOf[ScConstructorInvocation]))
+//      .toList
+//    val mixins = t.templateParents.map(x=>x.typeElementsWithoutConstructor.map(toType).map(toCtor).toList).getOrElse(Nil)
+//    val self    = t.selfType match {
+//      case Some(tpe: ptype.ScType) => m.Term.Param(Nil, m.Term.Name("self"), Some(toType(tpe)), None)
+//      case None => m.Term.Param(Nil, m.Name.Anonymous(), None, None)
+//    }
+//     FIXME: preserve expression and member order
+//    val stats = (exprs, members) match {
+//      case (Some(exp), Some(hld)) => hld ++ exp
+//      case (Some(exp), None)  => exp
+//      case (None, Some(hld))  => hld
+//      case (None, None)       => Nil
+//    }
+//    m.Template(early, ctor ++ mixins, self, stats)
+    toDo213
   }
 
   // Java conversion
@@ -231,7 +247,7 @@ trait TreeAdapter {
     val ctor = t.extendsBlock.templateParents match {
       case Some(parents) =>
         parents.constructorInvocation match {
-          case Some(constrInvocation) => toCtor(constrInvocation)
+          case Some(constrInvocation) => toDo213 /*toCtor(constrInvocation)*/ // TODO 2.13
           case None => unreachable(s"no constructor found in class ${t.qualifiedName}")
         }
       case None => unreachable(s"Class ${t.qualifiedName} has no parents")
@@ -242,35 +258,43 @@ trait TreeAdapter {
       case None                    =>
         m.Term.Param(Nil, m.Name.Anonymous(), None, None)
     }
-    m.Template(early, List(ctor), self, Nil)
+    // TODO 2.13
+//    m.Template(early, List(ctor), self, Nil)
+    toDo213
   }
 
-  def toCtor(constrInvocation: ScConstructorInvocation): m.Ctor.Call = {
-    val ctorCall@m.Term.Apply(ctorRef, _) = toCtor(toType(constrInvocation.typeElement))
-    if (constrInvocation.arguments.isEmpty) { ctorCall }
-    else {
-      val head = m.Term.Apply(ctorRef, constrInvocation.arguments.head.exprs.map(callArgs).toList)
-      constrInvocation.arguments.tail.foldLeft(head)((term, exprList) => m.Term.Apply(term, exprList.exprs.map(callArgs).toList))
-    }
-  }
+  // TODO 2.13
+//  def toCtor(constrInvocation: ScConstructorInvocation): m.Ctor.Call = {
+//    val ctorCall@m.Term.Apply(ctorRef, _) = toCtor(toType(constrInvocation.typeElement))
+//    if (constrInvocation.arguments.isEmpty) { ctorCall }
+//    else {
+//      val head = m.Term.Apply(ctorRef, constrInvocation.arguments.head.exprs.map(callArgs).toList)
+//      constrInvocation.arguments.tail.foldLeft(head)((term, exprList) => m.Term.Apply(term, exprList.exprs.map(callArgs).toList))
+//    }
+//  }
 
   private def toCtor(tp: m.Type): m.Term.Apply = {
-    val ctor = toCtorRef(tp)
-    m.Term.Apply(ctor, Nil)
+    // TODO 2.13
+    //    val ctor = toCtorRef(tp)
+//    m.Term.Apply(ctor, Nil)
+    toDo213
   }
 
-  private def toCtorRef(tp: m.Type): m.Ctor.Call = {
-    tp match {
-      case m.Type.Name(value) => m.Ctor.Ref.Name(value)
-      case m.Type.Select(qual, name) => m.Ctor.Ref.Select(qual, m.Ctor.Ref.Name(name.value))
-      case m.Type.Project(qual, name) => m.Ctor.Ref.Project(qual, m.Ctor.Ref.Name(name.value))
-      case m.Type.Apply(tpe, args) => m.Term.ApplyType(toCtorRef(tpe), args)
-      case other => unreachable(s"Unexpected type in constructor type element - $other")
-    }
-  }
+  // TODO 2.13
+//  private def toCtorRef(tp: m.Type): m.Ctor.Call = {
+//    tp match {
+//      case m.Type.Name(value) => m.Ctor.Ref.Name(value)
+//      case m.Type.Select(qual, name) => m.Ctor.Ref.Select(qual, m.Ctor.Ref.Name(name.value))
+//      case m.Type.Project(qual, name) => m.Ctor.Ref.Project(qual, m.Ctor.Ref.Name(name.value))
+//      case m.Type.Apply(tpe, args) => m.Term.ApplyType(toCtorRef(tpe), args)
+//      case other => unreachable(s"Unexpected type in constructor type element - $other")
+//    }
+//  }
 
   def toAnnot(annot: ScAnnotation): m.Mod.Annot = {
-    m.Mod.Annot(toCtor(annot.constructorInvocation))
+    // TODO 2.13
+//    m.Mod.Annot(toCtor(annot.constructorInvocation))
+    toDo213
   }
 
   def expression(e: ScExpression): m.Term = {
@@ -300,11 +324,15 @@ trait TreeAdapter {
       case t: ScBlock =>
         m.Term.Block(t.statements.map(ideaToMeta(_).asInstanceOf[m.Stat]).toList)
       case t: ScMethodCall =>
-        t.withSubstitutionCaching { tp =>
-          m.Term.Apply(expression(t.getInvokedExpr), t.args.exprs.map(callArgs).toList)
-        }
+        // TODO 2.13
+//        t.withSubstitutionCaching { tp =>
+//          m.Term.Apply(expression(t.getInvokedExpr), t.args.exprs.map(callArgs).toList)
+//        }
+        toDo213
       case ScInfixExpr.withAssoc(base, operation, argument) =>
-        m.Term.ApplyInfix(expression(base), toTermName(operation), Nil, expression(argument))
+        // TODO 2.13
+//        m.Term.ApplyInfix(expression(base), toTermName(operation), Nil, expression(argument))
+        toDo213
       case t: ScPrefixExpr =>
         m.Term.ApplyUnary(toTermName(t.operation), expression(t.operand))
       case t: ScPostfixExpr =>
@@ -312,9 +340,11 @@ trait TreeAdapter {
           m.Term.Apply(m.Term.Select(expression(t.operand), toTermName(t.operation)), Nil)
         }
       case t: ScIf =>
-        val unit = m.Lit.Unit(())
-        m.Term.If(expression(t.condition.get),
-            t.thenExpression.map(expression).getOrElse(unit), t.elseExpression.map(expression).getOrElse(unit))
+        // TODO 2.13
+//        val unit = m.Lit.Unit(())
+//        m.Term.If(expression(t.condition.get),
+//            t.thenExpression.map(expression).getOrElse(unit), t.elseExpression.map(expression).getOrElse(unit))
+        toDo213
       case t: ScDo =>
         m.Term.Do(t.body.map(expression).getOrElse(m.Term.Placeholder()),
             t.condition.map(expression).getOrElse(m.Term.Placeholder()))
@@ -331,11 +361,15 @@ trait TreeAdapter {
       case t: ScReferenceExpression =>
         toTermName(t)
       case t: ScSuperReference =>
-        m.Term.Super(t.drvTemplate.map(ind).getOrElse(m.Name.Anonymous()), getSuperName(t))
+        // TODO 2.13
+//        m.Term.Super(t.drvTemplate.map(ind).getOrElse(m.Name.Anonymous()), getSuperName(t))
+        toDo213
       case t: ScThisReference =>
         m.Term.This(t.reference.map(ind).getOrElse(m.Name.Anonymous()))
       case t: ScNewTemplateDefinition =>
-        m.Term.New(newTemplate(t))
+        // TODO 2.13
+//        m.Term.New(newTemplate(t))
+        toDo213
       case t: ScFunctionExpr =>
         m.Term.Function(t.parameters.map(convertParam).toList, expression(t.result).get)
       case t: ScTuple =>
@@ -349,11 +383,17 @@ trait TreeAdapter {
         def tryTerm = expression(tryBlock).getOrElse(unreachable)
         val res = catchBlock match {
           case Some(ScCatchBlock(clauses)) if clauses.caseClauses.size == 1 =>
-            m.Term.TryWithTerm(tryTerm, clauses.caseClause.expr.map(expression).getOrElse(unreachable), fblk)
+            // TODO 2.13
+//            m.Term.TryWithTerm(tryTerm, clauses.caseClause.expr.map(expression).getOrElse(unreachable), fblk)
+            toDo213
           case Some(ScCatchBlock(clauses)) =>
-            m.Term.TryWithCases(tryTerm, clauses.caseClauses.map(caseClause), fblk)
+            // TODO 2.13
+//            m.Term.TryWithCases(tryTerm, clauses.caseClauses.map(caseClause), fblk)
+            toDo213
           case None =>
-            m.Term.TryWithCases(tryTerm, Seq.empty, fblk)
+            // TODO 2.13
+//            m.Term.TryWithCases(tryTerm, Seq.empty, fblk)
+            toDo213
           case _ => unreachable
         }
         res
@@ -375,14 +415,15 @@ trait TreeAdapter {
     }
   }
 
-  def callArgs(e: ScExpression): m.Term.Arg = {
-    e match {
-      case t: ScAssignment => m.Term.Arg.Named(toTermName(t.leftExpression), expression(t.rightExpression).get)
-      case _: ScUnderscoreSection => m.Term.Placeholder()
-      case t: ScTypedExpression if t.isSequenceArg=> m.Term.Arg.Repeated(expression(t.expr))
-      case other => expression(e)
-    }
-  }
+  // TODO 2.13
+//  def callArgs(e: ScExpression): m.Term.Arg = {
+//    e match {
+//      case t: ScAssignment => m.Term.Arg.Named(toTermName(t.leftExpression), expression(t.rightExpression).get)
+//      case _: ScUnderscoreSection => m.Term.Placeholder()
+//      case t: ScTypedExpression if t.isSequenceArg=> m.Term.Arg.Repeated(expression(t.expr))
+//      case other => expression(e)
+//    }
+//  }
 
   def enumerators(en: ScEnumerators): List[m.Enumerator] = {
     def toEnumerator(nm: ScEnumerator): m.Enumerator = {
@@ -403,11 +444,13 @@ trait TreeAdapter {
   }
 
   def toParams(argss: List[ScArgumentExprList]): List[List[m.Term.Param]] = {
-    argss.map { args =>
-      args.matchedParameters.toList map { case (_, param) =>
-        m.Term.Param(param.psiParam.map(p => convertMods(p.getModifierList)).getOrElse(Seq.empty), toParamName(param), Some(toType(param.paramType)), None)
-      }
-    }
+    // TODO 2.13
+//    argss.map { args =>
+//      args.matchedParameters.toList map { case (_, param) =>
+//        m.Term.Param(param.psiParam.map(p => convertMods(p.getModifierList)).getOrElse(Seq.empty), toParamName(param), Some(toType(param.paramType)), None)
+//      }
+//    }
+    toDo213
   }
 
   def expression(tree: Option[ScExpression]): Option[m.Term] = {
@@ -439,18 +482,19 @@ trait TreeAdapter {
   }
 
   // TODO: WHY?!
-  def getCtorRef(q: ScStableCodeReference): m.Ctor.Ref = {
-    q.pathQualifier match {
-      case Some(_: ScSuperReference) =>
-        m.Ctor.Ref.Select(m.Term.Super(m.Name.Anonymous(), m.Name.Anonymous()), toCtorName(q))
-      case Some(_: ScThisReference) =>
-        m.Ctor.Ref.Select(m.Term.This(m.Name.Anonymous()), toCtorName(q))
-      case Some(parent:ScStableCodeReference) =>
-        m.Ctor.Ref.Select(getQualifier(parent), toCtorName(q))
-      case None        => toCtorName(q)
-      case Some(other) => other ?!
-    }
-  }
+  // TODO 2.13
+//  def getCtorRef(q: ScStableCodeReference): m.Ctor.Ref = {
+//    q.pathQualifier match {
+//      case Some(_: ScSuperReference) =>
+//        m.Ctor.Ref.Select(m.Term.Super(m.Name.Anonymous(), m.Name.Anonymous()), toCtorName(q))
+//      case Some(_: ScThisReference) =>
+//        m.Ctor.Ref.Select(m.Term.This(m.Name.Anonymous()), toCtorName(q))
+//      case Some(parent:ScStableCodeReference) =>
+//        m.Ctor.Ref.Select(getQualifier(parent), toCtorName(q))
+//      case None        => toCtorName(q)
+//      case Some(other) => other ?!
+//    }
+//  }
 
   def imports(t: p.toplevel.imports.ScImportExpr):m.Importer = {
     def selector(sel: p.toplevel.imports.ScImportSelector): m.Importee = {
@@ -497,10 +541,14 @@ trait TreeAdapter {
   }
 
   def toPatternDefinition(t: ScPatternDefinition): m.Tree = {
-    if(t.bindings.exists(_.isVal))
-      m.Defn.Val(convertMods(t), List(t.pList.patterns.map(pattern), t.typeElement.map(toType), expression(t.expr).get))
-    else if(t.bindings.exists(_.isVar))
-      m.Defn.Var(convertMods(t), List(t.pList.patterns.map(pattern), t.typeElement.map(toType), expression(t.expr)))
+    if(t.bindings.exists(_.isVal)) {
+      // TODO 2.13
+//      m.Defn.Val(convertMods(t), List(t.pList.patterns.map(pattern), t.typeElement.map(toType), expression(t.expr).get))
+      toDo213
+    } else if(t.bindings.exists(_.isVar))
+      // TODO 2.13
+//      m.Defn.Var(convertMods(t), List(t.pList.patterns.map(pattern), t.typeElement.map(toType), expression(t.expr)))
+      toDo213
     else unreachable
   }
 
@@ -560,9 +608,11 @@ trait TreeAdapter {
   protected def convertParam(param: params.ScParameter): m.Term.Param = {
     val mods = convertMods(param) ++ (if (param.isImplicitParameter) Seq(m.Mod.Implicit()) else Seq.empty)
     val default = param.getActualDefaultExpression.map(expression)
-    if (param.isVarArgs)
-      m.Term.Param(mods, toTermName(param), param.typeElement.map(tp => m.Type.Arg.Repeated(toType(tp))), default)
-    else
+    if (param.isVarArgs) {
+      // TODO 2.13
+//      m.Term.Param(mods, toTermName(param), param.typeElement.map(tp => m.Type.Arg.Repeated(toType(tp))), default)
+      toDo213
+    } else
       m.Term.Param(mods, toTermName(param), param.typeElement.map(toType), default)
   }
 }

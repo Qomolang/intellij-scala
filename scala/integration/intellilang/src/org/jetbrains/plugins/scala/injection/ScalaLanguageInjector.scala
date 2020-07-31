@@ -344,16 +344,16 @@ object ScalaLanguageInjector {
     case _                                              => None
   }
 
-  private def extractMultiLineStringRanges(literal: ScLiteral): Seq[TextRange] = {
+  private def extractMultiLineStringRanges(literal: ScLiteral): collection.Seq[TextRange] = {
     val range = getRangeInElement(literal)
     val rangeStartOffset = range.getStartOffset
 
-    val rangesCollected = mutable.MutableList[TextRange]()
+    val rangesCollected = mutable.ListBuffer[TextRange]()
     val extractedText = range.substring(literal.getText)
     val marginChar = MultilineStringUtil.getMarginChar(literal)
 
     var count = 0
-    val lines = new immutable.WrappedString(extractedText).lines
+    val lines = extractedText.lines
 
     for (line <- lines) {
       val lineLength = line.length

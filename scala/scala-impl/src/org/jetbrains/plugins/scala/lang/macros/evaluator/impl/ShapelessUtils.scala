@@ -27,7 +27,7 @@ trait ShapelessUtils {
     case _ => StdTypes.instance(context.place.projectContext).Any
   }
 
-  private def extractFiledsFromClass(c: ScClass):Seq[(String, ScType)] = {
+  private def extractFiledsFromClass(c: ScClass): collection.Seq[(String, ScType)] = {
     c.constructor.map(_.parameters.map(p=> (p.name, p.`type`().getOrAny))).getOrElse(Seq.empty)
   }
 

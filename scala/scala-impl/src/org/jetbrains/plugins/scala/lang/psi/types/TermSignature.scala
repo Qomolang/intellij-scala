@@ -251,7 +251,7 @@ object TermSignature {
 
 object PhysicalMethodSignature {
   @tailrec
-  def typesEval(method: PsiMethod): List[Seq[() => ScType]] = method match {
+  def typesEval(method: PsiMethod): List[collection.Seq[() => ScType]] = method match {
     case fun: ScFunction =>
       fun.effectiveParameterClauses.toList
         .map(_.effectiveParameters.map(p => () => scalaParamType(p)))

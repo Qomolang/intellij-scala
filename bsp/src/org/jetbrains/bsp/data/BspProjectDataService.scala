@@ -45,7 +45,7 @@ class BspProjectDataService extends AbstractDataService[BspProjectData, Project]
 
 object BspProjectDataService {
 
-  private def configureVcs(vcsRootsCandidates: Seq[File], project: Project): Unit = {
+  private def configureVcs(vcsRootsCandidates: collection.Seq[File], project: Project): Unit = {
     val detectedRoots = {
       val detector = ServiceManager.getService(project, classOf[VcsRootDetector])
       vcsRootsCandidates.flatMap { candidate =>
