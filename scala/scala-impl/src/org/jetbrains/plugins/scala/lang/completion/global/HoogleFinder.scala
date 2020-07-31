@@ -34,7 +34,7 @@ private final class HoogleFinder(originalType: ScType,
       case _ => Seq.empty
     }(PostfixCandidate)
 
-  private def targetTypeDefinitions: Seq[ScTypeDefinition] = valueType match {
+  private def targetTypeDefinitions: collection.Seq[ScTypeDefinition] = valueType match {
     case ExtractClass(definition: ScTypeDefinition) =>
       (definition +: definition.supers.filterByType[ScTypeDefinition]) ++
         contextsOfType[ScTypeDefinition]

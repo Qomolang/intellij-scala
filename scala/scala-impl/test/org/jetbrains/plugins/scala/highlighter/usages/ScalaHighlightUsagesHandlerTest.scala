@@ -209,7 +209,7 @@ class ScalaHighlightUsagesHandlerTest extends ScalaLightCodeInsightFixtureTestAd
     val targets = handler.getTargets
     Assert.assertEquals(1, targets.size())
     handler.computeUsages(targets)
-    val actualUsages: Seq[String] = handler.getReadUsages.asScala.map(_.substring(getFile.getText))
+    val actualUsages: Seq[String] = handler.getReadUsages.asScala.map(_.substring(getFile.getText)).toSeq
     Assert.assertEquals(s"actual: $actualUsages, expected: $expected", expected, actualUsages)
   }
 

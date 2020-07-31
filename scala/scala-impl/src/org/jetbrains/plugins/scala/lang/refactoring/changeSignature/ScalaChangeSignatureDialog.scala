@@ -342,8 +342,8 @@ class ScalaChangeSignatureDialog(val method: ScalaMethodDescriptor,
       createTypeFromText(fragment.getText, fragment.getContext, fragment)
     }.getOrElse(api.Any)
 
-  protected def splittedItems: Seq[Seq[ScalaParameterTableModelItem]] = {
-    def inner(items: Seq[ScalaParameterTableModelItem]): Seq[Seq[ScalaParameterTableModelItem]] = {
+  protected def splittedItems: collection.Seq[collection.Seq[ScalaParameterTableModelItem]] = {
+    def inner(items: collection.Seq[ScalaParameterTableModelItem]): collection.Seq[collection.Seq[ScalaParameterTableModelItem]] = {
       if (items.isEmpty) return Seq(items)
 
       val index = items.tail.indexWhere(_.startsNewClause)
@@ -356,7 +356,7 @@ class ScalaChangeSignatureDialog(val method: ScalaMethodDescriptor,
     inner(parameterItems)
   }
 
-  protected def parameterItems: Seq[ScalaParameterTableModelItem] = {
+  protected def parameterItems: collection.Seq[ScalaParameterTableModelItem] = {
     myParametersTableModel.getItems.asScala
   }
 

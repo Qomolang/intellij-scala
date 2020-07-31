@@ -140,7 +140,7 @@ abstract class ScalaHighlightsTestBase extends ScalaLightCodeInsightFixtureTestA
         .filter(it => descriptionMatches(it.getDescription))
         .filter(checkOffset(_, offset))
 
-    TestPrepareResult(fixture.getFile.getText, expectedHighlights, actualHighlights)
+    TestPrepareResult(fixture.getFile.getText, expectedHighlights, actualHighlights.toSeq)
   }
 
   private def createScratchFile(normalizedText: String) = {

@@ -23,7 +23,7 @@ import org.jetbrains.plugins.scala.macroAnnotations.CachedInUserData
 import org.jetbrains.plugins.scala.util.ScEquivalenceUtil
 
 import scala.annotation.tailrec
-import scala.collection.JavaConverters._
+import scala.jdk.CollectionConverters._
 import scala.collection.mutable.ArrayBuffer
 import scala.reflect.ClassTag
 
@@ -81,7 +81,7 @@ object ScalaInheritors {
       case _                        => Seq()
     }
 
-  def directInheritorCandidates(clazz: PsiClass, scope: GlobalSearchScope): Seq[ScTemplateDefinition] = {
+  def directInheritorCandidates(clazz: PsiClass, scope: GlobalSearchScope): collection.Seq[ScTemplateDefinition] = {
     val name: String = clazz.name
     val qName = clazz.qualifiedNameOpt.getOrElse(name)
     if (name == null || clazz.isEffectivelyFinal) return Seq.empty
@@ -110,7 +110,7 @@ object ScalaInheritors {
     inheritors
   }
 
-  def directInheritorCandidates(clazz: PsiClass, localScope: LocalSearchScope): Seq[ScTemplateDefinition] = {
+  def directInheritorCandidates(clazz: PsiClass, localScope: LocalSearchScope): collection.Seq[ScTemplateDefinition] = {
     val name: String = clazz.name
     if (name == null || clazz.isEffectivelyFinal) return Seq.empty
 

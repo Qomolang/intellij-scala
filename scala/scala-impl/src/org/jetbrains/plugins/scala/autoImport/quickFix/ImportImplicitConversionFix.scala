@@ -20,10 +20,11 @@ import org.jetbrains.plugins.scala.settings.ScalaApplicationSettings
 import scala.collection.mutable.ArrayBuffer
 
 class ImportImplicitConversionFix private (ref: ScReferenceExpression,
-                                           found: Seq[GlobalImplicitConversion])
+                                           found: collection.Seq[GlobalImplicitConversion])
   extends ScalaImportElementFix(ref) {
 
-  override val elements: Seq[MemberToImport] = found.map(f => MemberToImport(f.function, f.owner, f.pathToOwner))
+  override val elements: collection.Seq[MemberToImport] =
+    found.map(f => MemberToImport(f.function, f.owner, f.pathToOwner))
 
   override def createAddImportAction(editor: Editor): ScalaAddImportAction[_, _] =
     ScalaAddImportAction.importImplicitConversion(editor, elements, ref)
@@ -114,7 +115,7 @@ object ImportImplicitConversionFix {
 
   //todo we already search for implicit parameters, so we could import them together with a conversion
   // need to think about UX
-  private def mayFindImplicits(notFoundImplicitParameters: Seq[ScalaResolveResult],
+  private def mayFindImplicits(notFoundImplicitParameters: collection.Seq[ScalaResolveResult],
                               owner: ScExpression): Boolean =
     notFoundImplicitParameters.isEmpty || ImportImplicitInstanceFix(notFoundImplicitParameters, owner).nonEmpty
 }

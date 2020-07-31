@@ -15,7 +15,7 @@ case class JvmEnvironment(
 object JvmEnvironment {
   def fromBsp(environment: JvmEnvironmentItem): JvmEnvironment = {
     JvmEnvironment(
-      classpath = environment.getClasspath.asScala.map(x => new URI(x).getPath),
+      classpath = environment.getClasspath.asScala.map(x => new URI(x).getPath).toSeq,
       workdir = environment.getWorkingDirectory,
       environmentVariables = environment.getEnvironmentVariables.asScala.toMap,
       jvmOptions = environment.getJvmOptions.asScala.toList

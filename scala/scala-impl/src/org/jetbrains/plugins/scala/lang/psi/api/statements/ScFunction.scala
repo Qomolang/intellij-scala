@@ -86,7 +86,7 @@ trait ScFunction extends ScalaPsiElement with ScMember.WithBaseIconProvider with
 
   override def clauses: Option[ScParameters] = Some(paramClauses)
 
-  override def declaredElements: Seq[ScFunction] = Seq(this)
+  override def declaredElements: collection.Seq[ScFunction] = collection.Seq(this)
 
   def isExtensionMethod: Boolean
 

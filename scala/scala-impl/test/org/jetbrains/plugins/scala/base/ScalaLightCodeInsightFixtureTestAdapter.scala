@@ -122,10 +122,10 @@ abstract class ScalaLightCodeInsightFixtureTestAdapter
   }
 
   protected def checkCaretOffsets(expectedCarets: Seq[Int],
-                                  actualCarets: Seq[Int] = this.allCaretOffsets,
+                                  actualCarets: collection.Seq[Int] = this.allCaretOffsets,
                                   inText: String = getFile.getText): Unit = {
     if (expectedCarets.nonEmpty) {
-      def patchTextWithCarets(text: String, caretOffsets: Seq[Int]): String =
+      def patchTextWithCarets(text: String, caretOffsets: collection.Seq[Int]): String =
         caretOffsets
           .sorted(Ordering.Int.reverse)
           .foldLeft(text)(_.patch(_, "<caret>", 0))
@@ -234,7 +234,7 @@ object ScalaLightCodeInsightFixtureTestAdapter {
       VfsUtil.saveText(file, normalize(fileText))
     }
 
-    def allCaretOffsets: Seq[Int] = {
+    def allCaretOffsets: collection.Seq[Int] = {
       adapter.getFixture
         .getEditor
         .getCaretModel

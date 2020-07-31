@@ -90,7 +90,10 @@ private object ScalaFilePasteProvider {
   }
 
   implicit class CopyPasteManagerExt(private val manager: CopyPasteManager) extends AnyVal {
-    def copiedText: Option[String] = Option(manager.getContents[String](DataFlavor.stringFlavor))
-    def copiedFiles: Option[Seq[File]] = Option(manager.getContents[ju.List[File]](DataFlavor.javaFileListFlavor)).map(_.asScala)
+    def copiedText: Option[String] =
+      Option(manager.getContents[String](DataFlavor.stringFlavor))
+
+    def copiedFiles: Option[collection.Seq[File]] =
+      Option(manager.getContents[ju.List[File]](DataFlavor.javaFileListFlavor)).map(_.asScala)
   }
 }

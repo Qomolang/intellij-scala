@@ -61,9 +61,9 @@ class SbtStructureDump {
 
   def dumpFromProcess(directory: File,
                       structureFilePath: String,
-                      options: Seq[String],
+                      options: collection.Seq[String],
                       vmExecutable: File,
-                      vmOptions: Seq[String],
+                      vmOptions: collection.Seq[String],
                       environment: Map[String, String],
                       sbtLauncher: File,
                       sbtStructureJar: File,
@@ -99,7 +99,7 @@ class SbtStructureDump {
   /** Run sbt with some sbt commands. */
   def runSbt(directory: File,
              vmExecutable: File,
-             vmOptions: Seq[String],
+             vmOptions: collection.Seq[String],
              environment: Map[String, String],
              sbtLauncher: File,
              sbtCommandLineArgs: List[String],

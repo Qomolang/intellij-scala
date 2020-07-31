@@ -81,7 +81,7 @@ object ScalaInlayParameterHintsProvider {
       new hints.Option(id, s"<html><body>$nameBody</body></html>", false)
   }
 
-  private def parameterHints(matchedParameters: Seq[(ScExpression, Parameter)]) = {
+  private def parameterHints(matchedParameters: collection.Seq[(ScExpression, Parameter)]) = {
     val (varargs, regular) = matchedParameters.partition {
       case (_, parameter) => parameter.isRepeated
     }

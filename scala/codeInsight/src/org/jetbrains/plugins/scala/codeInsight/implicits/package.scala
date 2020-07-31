@@ -16,14 +16,14 @@ package object implicits {
   private[implicits] type Inlay = com.intellij.openapi.editor.Inlay[_ <: EditorCustomElementRenderer]
 
   implicit class Model(private val model: InlayModel) extends AnyVal {
-    def inlaysIn(range: TextRange): Seq[Inlay] =
-      model.getInlineElementsInRange(range.getStartOffset, range.getEndOffset)
+    def inlaysIn(range: TextRange): collection.Seq[Inlay] =
+      model.getInlineElementsInRange(range.getStartOffset, range.getEndOffset, classOf[EditorCustomElementRenderer])
         .asScala
         .filter(ScalaImplicitHintKey.isIn)
 
-    def add(hint: Hint): Unit = {
-      Option(ImplicitHint.addTo(hint, model)).foreach(_.putUserData(ScalaImplicitHintKey, true))
-    }
+    def add(hint: Hint): Unit = Option(
+      ImplicitHint.addTo(hint, model)).foreach(_.putUserData(ScalaImplicitHintKey, true)
+    )
   }
 
   class ShortcutManager {

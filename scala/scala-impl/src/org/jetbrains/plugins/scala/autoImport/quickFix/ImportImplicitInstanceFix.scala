@@ -57,7 +57,7 @@ case class FoundImplicit(instance: GlobalImplicitInstance, path: Seq[ScalaResolv
 object ImportImplicitInstanceFix {
   private case class TypeToSearch(path: Seq[ScalaResolveResult], scType: ScType)
 
-  def apply(notFoundImplicitParams: Seq[ScalaResolveResult],
+  def apply(notFoundImplicitParams: collection.Seq[ScalaResolveResult],
             owner: ImplicitArgumentsOwner,
             popupPosition: PopupPosition = PopupPosition.best): Option[ImportImplicitInstanceFix] = {
 
@@ -84,7 +84,7 @@ object ImportImplicitInstanceFix {
 
   private def withProbableArguments(prefix: Seq[ScalaResolveResult],
                                     parameter: ScalaResolveResult,
-                                    visited: Set[PsiNamedElement] = Set.empty): Seq[TypeToSearch] = {
+                                    visited: Set[PsiNamedElement] = Set.empty): collection.Seq[TypeToSearch] = {
     if (visited(parameter.element))
       return Seq.empty
 

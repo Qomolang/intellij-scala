@@ -170,7 +170,7 @@ class ScalaCompilerHighlightingTest
     def rec(attemptsLeft: Int): Unit = {
       val actualResult = invokeAndWait {
         val document = virtualFile.findDocument.get
-        DaemonCodeAnalyzerImpl.getHighlights(document, null, getProject).asScala
+        DaemonCodeAnalyzerImpl.getHighlights(document, null, getProject).asScala.toSeq
       }
       try {
         assertThat(actualResult, expectedResult)

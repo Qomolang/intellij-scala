@@ -22,6 +22,7 @@ import org.jetbrains.plugins.scala.project.ScalaLanguageLevel.Scala_2_12
 import scala.collection.JavaConverters._
 import scala.collection.immutable
 import scala.meta.parsers.Parse
+import scala.meta.trees.error.toDo213
 import scala.meta.trees.{AbortException, ScalaMetaException, TreeConverter}
 import scala.meta.{Dialect, Tree}
 import scala.reflect.internal.util.ScalaClassLoader.URLClassLoader
@@ -234,12 +235,14 @@ object MetaExpansionsManager {
 
   // TODO: undo other paradise compatibility hacks
   def fixTree(tree: Tree): Tree = {
-    import scala.meta._
-    def fixParents(parents: immutable.Seq[Ctor.Call]) = parents.map({case Term.Apply(ctor: Ctor.Call, Nil) => ctor; case x=>x})
-    tree transform {
-      case c@Defn.Trait(_, _, _, _, t)  => c.copy(templ = t.copy(parents = fixParents(t.parents)))
-      case c@Defn.Class(_, _, _, _, t)  => c.copy(templ = t.copy(parents = fixParents(t.parents)))
-      case c@Defn.Object(_, _, t)       => c.copy(templ = t.copy(parents = fixParents(t.parents)))
-    }
+    // TODO 2.13
+//    import scala.meta._
+//    def fixParents(parents: immutable.Seq[Ctor.Call]) = parents.map({case Term.Apply(ctor: Ctor.Call, Nil) => ctor; case x=>x})
+//    tree transform {
+//      case c@Defn.Trait(_, _, _, _, t)  => c.copy(templ = t.copy(parents = fixParents(t.parents)))
+//      case c@Defn.Class(_, _, _, _, t)  => c.copy(templ = t.copy(parents = fixParents(t.parents)))
+//      case c@Defn.Object(_, _, t)       => c.copy(templ = t.copy(parents = fixParents(t.parents)))
+//    }
+    toDo213
   }
 }

@@ -84,7 +84,7 @@ trait ProjectStructureMatcher {
 
   private def assertModuleContentFoldersEqual(module: Module, folderType: JpsModuleSourceRootType[_])(expected: Seq[String]): Unit = {
     val contentRoot = getSingleContentRoot(module)
-    assertContentRootFoldersEqual(contentRoot, contentRoot.getSourceFolders(folderType).asScala, expected)
+    assertContentRootFoldersEqual(contentRoot, contentRoot.getSourceFolders(folderType).asScala.toSeq, expected)
   }
 
   private def assertModuleExcludedFoldersEqual(module: Module)(expected: Seq[String]): Unit = {

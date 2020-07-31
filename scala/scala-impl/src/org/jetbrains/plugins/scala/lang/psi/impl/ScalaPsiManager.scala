@@ -348,7 +348,7 @@ class ScalaPsiManager(implicit val project: Project) {
     else andType(types)
   }
 
-  private def andType(psiTypes: Seq[PsiType]): ScType = {
+  private def andType(psiTypes: collection.Seq[PsiType]): ScType = {
     new ProjectContext(project).typeSystem.andType(psiTypes.map(_.toScType()))
   }
 
@@ -452,11 +452,11 @@ object ScalaPsiManager {
     ctx.getService(classOf[ScalaPsiManagerHolder]).get
 
   private def registerLowMemoryWatcher(project: Project): Unit = {
-    LowMemoryWatcher.register(() => {
+    LowMemoryWatcher.register((() => {
       LOG.debug("Clear caches on low memory")
       val manager = ScalaPsiManager.instance(project)
       manager.clearOnLowMemory()
-    }, project.unloadAwareDisposable)
+    }): Runnable, project.unloadAwareDisposable)
   }
 
   object AnyScalaPsiModificationTracker extends SimpleModificationTracker

@@ -204,9 +204,9 @@ object ScalaCompilerTestBase {
 
       val problems = messages.asScala.filter { message =>
         categories.contains(message.getCategory)
-      }
+      }.toSeq
       if (problems.nonEmpty) {
-        val otherMessages = messages.asScala -- problems
+        val otherMessages = messages.asScala.filterNot(problems.contains)
         Assert.fail(
           s"""No compiler errors expected, but got:
             |${messagesText(problems)}
@@ -216,7 +216,7 @@ object ScalaCompilerTestBase {
       }
     }
 
-    private def messagesText(messages: Seq[CompilerMessage]): String =
+    private def messagesText(messages: collection.Seq[CompilerMessage]): String =
       messages.zipWithIndex.map { case (message, idx) => s"[$idx] [${message.getCategory}] : ${message.getMessage.trim}"}.mkString("\n")
   }
 }

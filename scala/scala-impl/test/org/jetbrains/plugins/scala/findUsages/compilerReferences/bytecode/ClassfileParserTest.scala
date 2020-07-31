@@ -3,7 +3,8 @@ package bytecode
 
 import java.io.InputStream
 
-import scala.collection.MapLike
+// TODO 2.13
+//import scala.collection.MapLike
 import scala.collection.immutable.StringOps
 import scala.reflect.ClassTag
 import org.junit.Assert._
@@ -58,7 +59,7 @@ class ClassfileParserTest {
     val expectedRefs: Seq[MemberReference] = Seq(
       methodRefOf[Predef.type]("Map", 88, 0),
       fieldRefOf[WithRefs]("noGetter", 96),
-      methodRefOf[MapLike[_, _, _]]("contains", 88, 1),
+//      methodRefOf[MapLike[_, _, _]]("contains", 88, 1), TODO 2.13
       methodRefOf[WithRefs]("s", 92, 0),
       methodRefOf[Predef.type]("augmentString", 98, 1),
       methodRefOf[Map.type]("apply", 88, 1),

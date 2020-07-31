@@ -19,7 +19,7 @@ trait MatcherAssertions extends FailableTest {
       case Some(value) =>
         def message = if (shouldPass) {
           val actualValueFancy = value match {
-            case seq: SeqLike[_, _] => seq.mkString(s"${seq.stringPrefix}(\n  ", ",\n  ", "\n)")
+            case seq: Seq[_] => seq.mkString(s"${seq.getClass.getSimpleName}(\n  ", ",\n  ", "\n)")
             case v                  => v.toString
           }
           "actual: " + actualValueFancy
