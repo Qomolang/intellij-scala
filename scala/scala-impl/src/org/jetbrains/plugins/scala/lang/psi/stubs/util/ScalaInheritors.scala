@@ -74,7 +74,7 @@ object ScalaInheritors {
     }
   }
 
-  def directInheritorCandidates(clazz: PsiClass, scope: SearchScope): Seq[ScTemplateDefinition] =
+  def directInheritorCandidates(clazz: PsiClass, scope: SearchScope): collection.Seq[ScTemplateDefinition] =
     scope match {
       case scope: GlobalSearchScope => directInheritorCandidates(clazz, scope)
       case scope: LocalSearchScope  => directInheritorCandidates(clazz, scope)
