@@ -112,7 +112,7 @@ lazy val scalaImpl: sbt.Project =
       ideExcludedDirectories := Seq(baseDirectory.value / "testdata" / "projects"),
       //scalacOptions in Global += "-Xmacro-settings:analyze-caches",
       libraryDependencies ++= DependencyGroups.scalaCommunity,
-      addCompilerPlugin(Dependencies.macroParadise),
+//      addCompilerPlugin(Dependencies.macroParadise),
       intellijPlugins := Seq(
         "org.intellij.intelliLang",
         "com.intellij.java-i18n",
@@ -129,9 +129,8 @@ lazy val scalaImpl: sbt.Project =
       packageMethod := PackagingMethod.MergeIntoOther(scalaCommunity),
       packageLibraryMappings ++= Seq(
         "org.scalameta" %% ".*" % ".*"                        -> Some("lib/scalameta.jar"),
-        "com.trueaccord.scalapb" %% "scalapb-runtime" % ".*"  -> None,
-        "com.trueaccord.lenses" %% "lenses" % ".*"            -> None,
-        "com.lihaoyi" %% "fastparse-utils" % ".*"             -> None,
+        "com.thesamet.scalapb" %% "scalapb-runtime" % ".*"  -> None,
+        "com.thesamet.scalapb" %% "lenses" % ".*"            -> None,
         Dependencies.scalaXml                                 -> Some("lib/scala-xml.jar"),
         Dependencies.scalaReflect                             -> Some("lib/scala-reflect.jar"),
         Dependencies.scalaLibrary                             -> None
@@ -148,7 +147,7 @@ lazy val scalaImpl: sbt.Project =
         BuildInfoKey.constant("bloopVersion", Versions.bloopVersion),
         BuildInfoKey.constant("sbtStructureVersion", Versions.sbtStructureVersion),
         BuildInfoKey.constant("sbtIdeaShellVersion", Versions.sbtIdeaShellVersion),
-        BuildInfoKey.constant("sbtIdeaCompilerIndicesVersion", Versions.sbtIdeaCompilerIndicesVersion),
+        BuildInfoKey.constant("sbtIdeaCompilerIndicesVersion", Versions.compilerIndicesVersion),
         BuildInfoKey.constant("sbtLatest_0_12", Versions.Sbt.latest_0_12),
         BuildInfoKey.constant("sbtLatest_0_13", Versions.Sbt.latest_0_13),
         BuildInfoKey.constant("sbtLatest_1_0", Versions.Sbt.latest_1_0),
@@ -167,7 +166,8 @@ lazy val compilerJps =
       packageMethod           :=  PackagingMethod.Standalone("lib/jps/compiler-jps.jar", static = true),
       libraryDependencies     ++= Dependencies.nailgun :: Dependencies.zincInterface  :: Nil,
       packageLibraryMappings  ++= Dependencies.nailgun       -> Some("lib/jps/nailgun.jar") ::
-                                  Dependencies.zincInterface -> Some("lib/jps/compiler-interface.jar") :: Nil)
+                                  Dependencies.zincInterface -> Some("lib/jps/compiler-interface.jar") :: Nil
+    )
 
 lazy val repackagedZinc =
   newProject("repackagedZinc", file("target/tools/zinc"))
@@ -181,7 +181,7 @@ lazy val repackagedZinc =
 lazy val compilerShared =
   newProject("compiler-shared", file("scala/compiler-shared"))
     .settings(
-      libraryDependencies ++= Seq(Dependencies.nailgun, Dependencies.compilerIndicesProtocol),
+      libraryDependencies ++= Seq(Dependencies.nailgun, Dependencies.compilerIndicesProtocol, Dependencies.zincInterface),
       packageLibraryMappings ++= Seq(
         Dependencies.nailgun                 -> Some("lib/jps/nailgun.jar"),
         Dependencies.compilerIndicesProtocol -> Some("lib/scala-compiler-indices-protocol_2.12-0.1.1.jar")
@@ -216,7 +216,7 @@ lazy val decompiler =
 lazy val macroAnnotations =
   newProject("macros", file("scala/macros"))
     .settings(
-      addCompilerPlugin(Dependencies.macroParadise),
+//      addCompilerPlugin(Dependencies.macroParadise),
       libraryDependencies ++= Seq(Dependencies.scalaReflect, Dependencies.scalaCompiler),
       packageMethod        := PackagingMethod.Skip()
     )
@@ -274,7 +274,7 @@ lazy val intelliLangIntegration = newProject(
 ).dependsOn(
   scalaImpl % "test->test;compile->compile"
 ).settings(
-  addCompilerPlugin(Dependencies.macroParadise),
+//  addCompilerPlugin(Dependencies.macroParadise),
   intellijPlugins += "org.intellij.intelliLang".toPlugin
 )
 
@@ -305,7 +305,7 @@ lazy val javaDecompilerIntegration =
 val localRepoArtifacts =
   (sbtStructureExtractor.name,  Versions.sbtStructureVersion) ::
   ("sbt-idea-shell",            Versions.sbtIdeaShellVersion) ::
-  ("sbt-idea-compiler-indices", Versions.sbtIdeaCompilerIndicesVersion) :: Nil
+  ("sbt-idea-compiler-indices", Versions.compilerIndicesVersion) :: Nil
 val localRepoPaths = LocalRepoPackager.localPluginRepoPaths(localRepoArtifacts)
 
 lazy val runtimeDependencies =

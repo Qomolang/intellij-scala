@@ -8,13 +8,14 @@ object Versions {
   // run runtimeDependencies/update manually
   val sbtVersion: String = Sbt.latest
   val bloopVersion = "1.4.1"
-  val zincVersion = "1.1.1"
+
+  val zincVersion = "1.4.0-M1"
   val intellijVersion = "202.6397.20"
-  val bspVersion = "2.0.0-M11"
-  val sbtStructureVersion: String = "2018.2.1+4-88400d3f"
+  val bspVersion = "2.0.0-M11+12-6a67fd76-SNAPSHOT"
+  val sbtStructureVersion: String = "2020.2+2-b4bf15a0"
   val sbtIdeaShellVersion: String = "2018.3"
-  val sbtIdeaCompilerIndicesVersion = "0.1.3"
-  val scalaMetaVersion = "1.8.0"
+  val compilerIndicesVersion = "1.0.4"
+  val scalaMetaVersion = "4.3.12"
   val paradiseVersion = "3.0.0-M11"
 
   object Scala {
@@ -30,12 +31,12 @@ object Versions {
     val latest_2_10 = "2.10.7"
     val latest_2_11 = "2.11.12"
     val latest_2_12 = "2.12.10"
-    val latest_2_13 = "2.13.1"
+    val latest_2_13 = "2.13.2"
     val latest_3_0 = "0.26.0-RC1"
-    val latest_dotty = latest_3_0
-    val latest: String = latest_2_12
-    /** Version used to build this project. Prefer latest_2_12 unless it causes problems. */
-    val project = "2.12.7"
+    val latest_dotty: String = latest_3_0
+    val latest: String = latest_2_13
+    /** Version used to build this project. Prefer latest unless it causes problems. */
+    val project: String = latest
 
     def binaryVersion(v: String): String =
       if (v.startsWith("2.9")) binary_2_9
@@ -53,7 +54,7 @@ object Versions {
 
     val latest_0_12 = "0.12.4"
     val latest_0_13 = "0.13.18"
-    val latest_1_0 = "1.3.8"
+    val latest_1_0 = "1.3.12"
     val latest: String = latest_1_0
     // ATTENTION: after adding sbt major version, also update:
     // buildInfoKeys, Sbt.scala and SbtUtil.latestCompatibleVersion
@@ -80,8 +81,8 @@ object Dependencies {
   val scalaLibrary: ModuleID = "org.scala-lang" % "scala-library" % scalaVersion
   val scalaReflect: ModuleID = "org.scala-lang" % "scala-reflect" % scalaVersion
   val scalaCompiler: ModuleID = "org.scala-lang" % "scala-compiler" % scalaVersion
-  val scalaXml: ModuleID = "org.scala-lang.modules" %% "scala-xml" % "1.0.6"
-//  val scalaParserCombinators: ModuleID = "org.scala-lang.modules" %% "scala-parser-combinators" % "1.0.4"
+  val scalaXml: ModuleID = "org.scala-lang.modules" %% "scala-xml" % "1.3.0"
+//  val scalaParserCombinators: ModuleID = "org.scala-lang.modules" %% "scala-parser-combinators" % "1.1.2"
   // this actually needs the explicit version because something in packager breaks otherwise (???)
   val sbtStructureCore: ModuleID = "org.jetbrains" %% "sbt-structure-core" % sbtStructureVersion
   val evoInflector: ModuleID = "org.atteo" % "evo-inflector" % "1.2"
@@ -92,7 +93,7 @@ object Dependencies {
   val ivy2: ModuleID = "org.apache.ivy" % "ivy" % "2.4.0"
 
   val scalastyle: ModuleID = "com.beautiful-scala" %% "scalastyle" % "1.4.0"
-  val scalariform: ModuleID = "org.scalariform" %% "scalariform" % "0.2.2"
+  val scalariform: ModuleID = "org.scalariform" %% "scalariform" % "0.2.10"
   val scalafmt: Seq[ModuleID] = Seq(
     "com.geirsson" %% "scalafmt-core" % "1.5.1",
     "com.geirsson" %% "metaconfig-core" % "0.4.0",
@@ -100,9 +101,9 @@ object Dependencies {
     "com.typesafe" % "config" % "1.2.1",
     "com.lihaoyi" %% "sourcecode" % "0.1.3"
   )
-  val macroParadise: ModuleID = "org.scalameta" % "paradise" % paradiseVersion cross CrossVersion.full
+//  val macroParadise: ModuleID = "org.scalameta" % "paradise" % paradiseVersion cross CrossVersion.full
   val scalaMetaCore: ModuleID = "org.scalameta" %% "scalameta" % scalaMetaVersion withSources() exclude("com.google.protobuf", "protobuf-java")
-  val fastparse: ModuleID = "com.lihaoyi" % s"fastparse_$scalaBinaryVersion" % "0.4.3" // transitive dependency of scalaMeta, needs explicit versioning
+  val fastparse: ModuleID = "com.lihaoyi" % s"fastparse_$scalaBinaryVersion" % "2.3.0" // transitive dependency of scalaMeta, needs explicit versioning
 
   val bcel: ModuleID = "org.apache.bcel" % "bcel" % "6.0"
 
@@ -110,17 +111,24 @@ object Dependencies {
   // when updating the version, do not forget to:
   //  1. update version in the sbt-idea-compiler indices plugin too
   //  2. update version in scala-plugin-common.xml compilerServer.plugin classpath setting
-  val compilerIndicesProtocol: ModuleID = "io.github.sugakandrey" %% "scala-compiler-indices-protocol" % "0.1.1"
+  val compilerIndicesProtocol: ModuleID = "org.jetbrains.scala" %% "scala-compiler-indices-protocol" % compilerIndicesVersion
 
   val nailgun: ModuleID = "org.jetbrains" % "nailgun-patched" % "1.0.1"
   val zinc = "org.scala-sbt" %% "zinc" % zincVersion
   val zincInterface = "org.scala-sbt" % "compiler-interface" % zincVersion
-  val sbtInterface = "org.scala-sbt" % "util-interface" % "1.1.2"
+  val sbtInterface = "org.scala-sbt" % "util-interface" % "1.3.0"
 
   val compilerBridgeSources_2_10 = "org.scala-sbt" % "compiler-bridge_2.10" % zincVersion classifier "sources"
   val compilerBridgeSources_2_11 = "org.scala-sbt" % "compiler-bridge_2.11" % zincVersion classifier "sources"
-  val compilerBridgeSources_2_13 = "org.scala-sbt" % "compiler-bridge_2.13.0-M2" % zincVersion classifier "sources"
+  val compilerBridgeSources_2_13 = "org.scala-sbt" % "compiler-bridge_2.13" % zincVersion classifier "sources"
   val dottySbtBridge = "ch.epfl.lamp" % "dotty-sbt-bridge" % Scala.latest_dotty
+
+  // "provided" danger: we statically depend on a single version, but need to support all the version
+  // some part of our code is now statically dependent on lib classes, another part uses reflections for other versions
+  val scalaTest = "org.scalatest" %% "scalatest" % "3.1.2" % "provided"
+  val utest = "com.lihaoyi" %% "utest" % "0.7.4" % "provided"
+  val specs2_2x = "org.specs2" %% "specs2-core" % "2.4.17" % "provided" excludeAll ExclusionRule(organization = "org.ow2.asm")
+  val specs2_4x = "org.specs2" %% "specs2-core" % "4.8.3" % "provided" excludeAll ExclusionRule(organization = "org.ow2.asm")
 
   /** The filtering function returns true for jars to be removed.
    * It's purpose is to exclude platform jars that may conflict with plugin dependencies. */
@@ -165,8 +173,8 @@ object DependencyGroups {
       .exclude("com.google.guava", "guava") // included in IDEA platform
     ,
     "ch.epfl.scala" %% "bsp-testkit" % bspVersion % "test",
-    "org.scalatest" %% "scalatest" % "3.0.5" % "test",
-    "com.propensive" %% "mercator" % "0.2.1"
+    "org.scalatest" %% "scalatest" % "3.1.2" % "test",
+    "com.propensive" %% "mercator" % "0.3.0"
   )
 
   val decompiler: Seq[ModuleID] = Seq(
@@ -178,13 +186,10 @@ object DependencyGroups {
   )
 
   val runners: Seq[ModuleID] = Seq(
-    "org.scala-lang" % "scala-compiler" % scalaVersion,
-    // "provided" danger: we statically depend on a single version, but need to support all the version
-    // some part of our code is now statically dependent on lib classes, another part uses reflections for other versions
-    "org.scalatest" %% "scalatest" % "3.0.1" % "provided",
-    "com.lihaoyi" %% "utest" % "0.7.4" % "provided",
-    "org.specs2" %% "specs2-core" % "2.4.17" % "provided" excludeAll ExclusionRule(organization = "org.ow2.asm")
-    //  val specs2: ModuleID = "org.specs2" %% "specs2-core" % "3.9.1" % "provided" excludeAll ExclusionRule(organization = "org.ow2.asm")
+    scalaCompiler,
+    scalaTest,
+    utest,
+    specs2_4x
   )
 
   val runtime: Seq[ModuleID] = Seq(
