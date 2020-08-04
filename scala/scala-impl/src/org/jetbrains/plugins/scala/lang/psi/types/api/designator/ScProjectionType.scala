@@ -114,7 +114,7 @@ final class ScProjectionType private(val projected: ScType,
         case ScDesignatorType(clazz: PsiClass)
           if elementClazz.exists(ScEquivalenceUtil.areClassesEquivalent(_, clazz)) =>
           return Some(element, ScSubstitutor(projected))
-        case p@ParameterizedType(ScDesignatorType(clazz: PsiClass), args)
+        case p @ ParameterizedType(ScDesignatorType(clazz: PsiClass), _)
           if elementClazz.exists(ScEquivalenceUtil.areClassesEquivalent(_, clazz)) =>
           return Some(element, ScSubstitutor(projected).followed(p.substitutor))
         case p: ScProjectionType =>
@@ -196,23 +196,23 @@ final class ScProjectionType private(val projected: ScType,
   def actualSubst: ScSubstitutor = actual()._2
 
   override def equivInner(r: ScType, constraints: ConstraintSystem, falseUndef: Boolean): ConstraintsResult = {
-    def isSingletonOk(typed: ScTypedDefinition): Boolean = {
+    def isSingletonOk(typed: ScTypedDefinition): Boolean =
       typed.nameContext match {
-        case _: ScValue => true
+        case _: ScValue                      => true
         case p: ScClassParameter if !p.isVar => true
-        case _ => false
+        case _                               => false
       }
+
+    def isEligibleForPrefixUnification(proj: ScType): Boolean = proj.subtypeExists {
+      case _: UndefinedType => true
+      case _                => false
     }
 
     actualElement match {
-      case a: ScTypedDefinition if isSingletonOk(a) =>
-        val subst = actualSubst
-        val tp = subst(a.`type`().getOrAny)
+      case td: ScTypedDefinition if isSingletonOk(td) =>
+        val tp = actualSubst(td.`type`().getOrAny)
         tp match {
           case designatorOwner: DesignatorOwner if designatorOwner.isSingleton =>
-            val resInner = tp.equiv(r, constraints, falseUndef)
-            if (resInner.isRight) return resInner
-          case _: ScLiteralType =>
             val resInner = tp.equiv(r, constraints, falseUndef)
             if (resInner.isRight) return resInner
           case _ =>
@@ -228,35 +228,22 @@ final class ScProjectionType private(val projected: ScType,
       case _ => ()
     }
 
-    this match {
-      case AliasType(_: ScTypeAliasDefinition, lower, _) =>
-        return (lower match {
-          case Right(tp) => tp
-          case _         => return ConstraintsResult.Left
-        }).equiv(r, constraints, falseUndef)
-      case _ =>
-    }
-
-    r match {
+    val res = r match {
       case t: StdType =>
         element match {
           case synth: ScSyntheticClass => synth.stdType.equiv(t, constraints, falseUndef)
-          case _ => ConstraintsResult.Left
+          case _                       => ConstraintsResult.Left
         }
       case ParameterizedType(ScProjectionType(_, _), _) =>
         r match {
-          case AliasType(_: ScTypeAliasDefinition, lower, _) =>
-            this.equiv(lower match {
-              case Right(tp) => tp
-              case _         => return ConstraintsResult.Left
-            }, constraints, falseUndef)
+          case AliasType(_: ScTypeAliasDefinition, Right(lower), _) =>
+            this.equiv(lower, constraints, falseUndef)
           case _ => ConstraintsResult.Left
         }
-      case proj2@ScProjectionType(p1, _) =>
+      case proj2 @ ScProjectionType(p1, _) =>
         proj2.actualElement match {
           case a: ScTypedDefinition if isSingletonOk(a) =>
-            val subst = actualSubst
-            val tp = subst(a.`type`().getOrAny)
+            val tp = actualSubst(a.`type`().getOrAny)
             tp match {
               case designatorOwner: DesignatorOwner if designatorOwner.isSingleton =>
                 val resInner = tp.equiv(this, constraints, falseUndef)
@@ -266,45 +253,24 @@ final class ScProjectionType private(val projected: ScType,
           case _ =>
         }
 
-        r match {
-          case AliasType(_: ScTypeAliasDefinition, lower, _) =>
-            this.equiv(lower match {
-              case Right(tp) => tp
-              case _         => return ConstraintsResult.Left
-            }, constraints, falseUndef)
-          case _ =>
+        val lElement = actualElement
+        val rElement = proj2.actualElement
+
+        val sameElements = lElement == rElement || {
+          lElement.name == rElement.name &&
+            (isEligibleForPrefixUnification(projected) || isEligibleForPrefixUnification(proj2.projected))
         }
 
-        if (actualElement != proj2.actualElement) {
-          actualElement match {
-            case _: ScObject =>
-            case t: ScTypedDefinition if t.isStable =>
-              val s: ScSubstitutor = ScSubstitutor(projected) followed actualSubst
-              t.`type`() match {
-                case Right(tp: DesignatorOwner) if tp.isSingleton =>
-                  return s(tp).equiv(r, constraints, falseUndef)
-                case _ =>
-              }
-            case _ =>
+        if (sameElements) projected.equiv(p1, constraints, falseUndef)
+        else
+          r match {
+            case AliasType(_: ScTypeAliasDefinition, Right(lower), _) =>
+              this.equiv(lower, constraints, falseUndef)
+            case _ => ConstraintsResult.Left
           }
-          proj2.actualElement match {
-            case _: ScObject =>
-            case t: ScTypedDefinition =>
-              val s: ScSubstitutor =
-                ScSubstitutor(p1) followed proj2.actualSubst
-              t.`type`() match {
-                case Right(tp: DesignatorOwner) if tp.isSingleton =>
-                  return s(tp).equiv(this, constraints, falseUndef)
-                case _ =>
-              }
-            case _ =>
-          }
-          return ConstraintsResult.Left
-        }
-        projected.equiv(p1, constraints, falseUndef)
       case ScThisType(_) =>
         element match {
-          case _: ScObject => ConstraintsResult.Left
+          case _: ScObject                        => ConstraintsResult.Left
           case t: ScTypedDefinition if t.isStable =>
             t.`type`() match {
               case Right(singleton: DesignatorOwner) if singleton.isSingleton =>
@@ -316,12 +282,22 @@ final class ScProjectionType private(val projected: ScType,
         }
       case _ => ConstraintsResult.Left
     }
+
+    res match {
+      case cs: ConstraintSystem   => cs
+      case ConstraintsResult.Left =>
+        this match {
+          case AliasType(_: ScTypeAliasDefinition, Right(lower), _) =>
+            lower.equiv(r, constraints, falseUndef)
+          case _ => ConstraintsResult.Left
+        }
+    }
   }
 
   override def isFinalType: Boolean = actualElement match {
     case cl: PsiClass if cl.isEffectivelyFinal => true
-    case alias: ScTypeAliasDefinition => alias.aliasedType.exists(_.isFinalType)
-    case _ => false
+    case alias: ScTypeAliasDefinition          => alias.aliasedType.exists(_.isFinalType)
+    case _                                     => false
   }
 
   override def visitType(visitor: ScalaTypeVisitor): Unit = visitor.visitProjectionType(this)
